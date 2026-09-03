@@ -33,6 +33,14 @@ def cadastrar_cliente(clientes):
     print(f"Cliente '{nome}' cadastrado com sucesso! (ID: {novo_id})")
 
 
+def buscar_cliente_por_id(clientes, id_cliente):
+    """Retorna o cliente com o ID informado, ou None se não existir."""
+    for c in clientes:
+        if c["id"] == id_cliente:
+            return c
+    return None
+
+
 def consultar_cliente(clientes):
     """RF02 - Busca clientes pelo nome ou telefone."""
     print("\n--- Consulta de Cliente ---")
@@ -60,11 +68,7 @@ def alterar_cliente(clientes):
         print("ID inválido. Deve ser um número.")
         return
 
-    cliente = None
-    for c in clientes:
-        if c["id"] == id_cliente:
-            cliente = c
-            break
+    cliente = buscar_cliente_por_id(clientes, id_cliente)
 
     if cliente is None:
         print("Cliente não encontrado.")
