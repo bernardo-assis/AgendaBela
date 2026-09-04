@@ -16,7 +16,7 @@ def carregar_dados():
         "servicos": [],
         "agendamentos": []
     }
-    
+
     if os.path.exists(CAMINHO_DADOS):
         try:
             with open(CAMINHO_DADOS, 'r', encoding='utf-8') as f:
@@ -36,7 +36,7 @@ def salvar_dados(dados):
     pasta = os.path.dirname(CAMINHO_DADOS)
     if pasta and not os.path.exists(pasta):
         os.makedirs(pasta)
-        
+
     with open(CAMINHO_DADOS, 'w', encoding='utf-8') as f:
         json.dump(dados, f, ensure_ascii=False, indent=4)
 
@@ -47,22 +47,28 @@ def menu_principal():
     agendamentos = dados["agendamentos"]
 
     while True:
-        print("\n" + "="*30)
-        print("      SISTEMA AGENDABELA")
-        print("="*30)
-        print("1. Cadastrar Cliente")
-        print("2. Consultar/Alterar Cliente")
-        print("3. Cadastrar Serviço")
-        print("4. Alterar/Inativar Serviço")
-        print("5. Realizar Agendamento")
-        print("6. Listar Agendamentos")
-        print("7. Concluir Atendimento")
-        print("8. Cancelar Agendamento")
-        print("9. Ver Histórico de Cliente")
-        print("10. Exibir Fila do Dia (Queue)")
-        print("0. Sair")
-        print("="*30)
-        
+        print("\n" + "="*35)
+        print("       SISTEMA AGENDABELA")
+        print("="*35)
+        print("  --- CLIENTES ---")
+        print("  1. Cadastrar Cliente")
+        print("  2. Consultar Cliente")
+        print("  3. Alterar Cliente")
+        print("  --- SERVIÇOS ---")
+        print("  4. Cadastrar Serviço")
+        print("  5. Alterar/Inativar Serviço")
+        print("  --- AGENDAMENTOS ---")
+        print("  6. Realizar Agendamento")
+        print("  7. Listar Agendamentos")
+        print("  8. Concluir Atendimento")
+        print("  9. Cancelar Agendamento")
+        print("  --- HISTÓRICO E FILA ---")
+        print("  10. Ver Histórico de Cliente")
+        print("  11. Exibir Fila do Dia")
+        print("="*35)
+        print("  0. Sair")
+        print("="*35)
+
         opcao = input("Escolha uma opção: ").strip()
 
         try:
@@ -70,34 +76,39 @@ def menu_principal():
                 cadastrar_cliente(clientes)
             elif opcao == '2':
                 consultar_cliente(clientes)
-                if input("Deseja alterar algum cliente? (S/N): ").strip().upper() == 'S':
-                    alterar_cliente(clientes)
             elif opcao == '3':
-                cadastrar_servico(servicos)
+                alterar_cliente(clientes)
             elif opcao == '4':
-                alterar_inativar_servico(servicos)
+                cadastrar_servico(servicos)
             elif opcao == '5':
-                cadastrar_agendamento(agendamentos, clientes, servicos)
+                alterar_inativar_servico(servicos)
             elif opcao == '6':
-                listar_agendamentos(agendamentos)
+                cadastrar_agendamento(agendamentos, clientes, servicos)
             elif opcao == '7':
                 listar_agendamentos(agendamentos)
-                alterar_status_agendamento(agendamentos, CONCLUIDO)
             elif opcao == '8':
                 listar_agendamentos(agendamentos)
-                alterar_status_agendamento(agendamentos, CANCELADO)
+                if agendamentos:
+                    alterar_status_agendamento(agendamentos, CONCLUIDO)
+                else:
+                    print("Nenhum agendamento para concluir.")
             elif opcao == '9':
-                historico_cliente(agendamentos)
+                listar_agendamentos(agendamentos)
+                if agendamentos:
+                    alterar_status_agendamento(agendamentos, CANCELADO)
+                else:
+                    print("Nenhum agendamento para cancelar.")
             elif opcao == '10':
+                historico_cliente(agendamentos)
+            elif opcao == '11':
                 exibir_fila_do_dia(agendamentos)
             elif opcao == '0':
-                print("Salvando dados em dados/dados.json e encerrando...")
+                print("Salvando dados e encerrando o sistema. Até logo!")
                 salvar_dados(dados)
                 break
             else:
-                print("Opção inválida.")
-                
-            # Grava automaticamente no dados.json a cada alteração
+                print("Opção inválida. Digite um número entre 0 e 11.")
+
             salvar_dados(dados)
 
         except Exception as e:
@@ -105,3 +116,4 @@ def menu_principal():
 
 if __name__ == "__main__":
     menu_principal()
+    
